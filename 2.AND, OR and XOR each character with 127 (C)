@@ -1,0 +1,19 @@
+#include<stdio.h>
+int main(){
+	char *str = "Hello World!";
+	printf("Original String:%s\n", str);
+	printf("After AND with 127:");
+	for(int i = 0; str[i] != '\0'; i++){
+		char ch = str[i] & 127;
+		printf("%c", ch);
+	}
+	printf("\nAfter XOR with 127:");
+	for(int i = 0; str[i] != '\0'; i++){
+		printf("%02X ", (unsigned char)(str[i] | 127));
+	}
+	printf("\nAfter OR with 127:");
+	for(int i = 0; str[i] != '\0'; i++){
+		printf("%02X ", (unsigned char)(str[i] ^ 127));
+	}
+	return 0;
+}
