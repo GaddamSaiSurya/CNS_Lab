@@ -1,0 +1,44 @@
+import java.util.Scanner;
+
+public class Hill {
+
+    static int[][] key = {{3, 3}, {2, 5}};
+    static int[][] inv = {{15, 17}, {20, 9}};
+
+    static String process(String s, int[][] m) {
+        StringBuilder r = new StringBuilder();
+
+        for (int i = 0; i < s.length(); i += 2) {
+            int a = s.charAt(i) - 'A';
+            int b = s.charAt(i + 1) - 'A';
+
+            r.append((char) ('A' +
+                    (m[0][0] * a + m[0][1] * b) % 26));
+
+            r.append((char) ('A' +
+                    (m[1][0] * a + m[1][1] * b) % 26));
+        }
+
+        return r.toString();
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter the plaintext: ");
+        String p = sc.nextLine().toUpperCase();
+
+        if (p.length() % 2 != 0) {
+            p += "X";
+        }
+
+        String e = process(p, key);
+        String d = process(e, inv);
+
+        System.out.println("Prepared plaintext: " + p);
+        System.out.println("Encrypted text: " + e);
+        System.out.println("Decrypted text: " + d);
+
+        sc.close();
+    }
+}
