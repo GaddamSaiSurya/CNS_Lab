@@ -1,0 +1,108 @@
+import java.util.Scanner;
+
+public class Playfair {
+
+    static char[][] m = new char[5][5];
+    static int[] row = new int[26];
+    static int[] col = new int[26];
+
+    static void create(String key) {
+        boolean[] used = new boolean[26];
+        used['J' - 'A'] = true;
+
+        String s = key.toUpperCase().replace('J', 'I')
+                + "ABCDEFGHIKLMNOPQRSTUVWXYZ";
+
+        int n = 0;
+
+        for (char c : s.toCharArray()) {
+            if (c >= 'A' && c <= 'Z' && !used[c - 'A']) {
+                used[c - 'A'] = true;
+
+                m[n / 5][n % 5] = c;
+                row[c - 'A'] = n / 5;
+                col[c - 'A'] = n % 5;
+
+                n++;
+            }
+        }
+    }
+
+    static String prepare(String s) {
+        s = s.toUpperCase().replace('J', 'I');
+
+        StringBuilder r = new StringBuilder();
+
+        for (int i = 0; i < s.length();) {
+            char a = s.charAt(i++);
+            r.append(a);
+
+            if (i == s.length() || a == s.charAt(i)) {
+                r.append('X');
+            } else {
+                r.append(s.charAt(i++));
+            }
+        }
+
+        return r.toString();
+    }
+
+    static String process(String s, boolean enc) {
+        StringBuilder r = new StringBuilder();
+        int d = enc ? 1 : 4;
+
+        for (int i = 0; i < s.length(); i += 2) {
+            char a = s.charAt(i);
+            char b = s.charAt(i + 1);
+
+            int x = row[a - 'A'];
+            int y = row[b - 'A'];
+            int p = col[a - 'A'];
+            int q = col[b - 'A'];
+
+            if (x == y) {
+                p = (p + d) % 5;
+                q = (q + d) % 5;
+            } else if (p == q) {
+                x = (x + d) % 5;
+                y = (y + d) % 5;
+            } else {
+                int t = p;
+                p = q;
+                q = t;
+            }
+
+            r.append(m[x][p]).append(m[y][q]);
+        }
+
+        return r.toString();
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter the keyword: ");
+        create(sc.nextLine());
+
+        System.out.print("Enter the plaintext: ");
+        String p = prepare(sc.nextLine());
+
+        String e = process(p, true);
+        String d = process(e, false);
+
+        System.out.println("\nKey Matrix:");
+
+        for (char[] line : m) {
+            for (char c : line) {
+                System.out.print(c + " ");
+            }
+            System.out.println();
+        }
+
+        System.out.println("\nPrepared text: " + p);
+        System.out.println("Encrypted text: " + e);
+        System.out.println("Decrypted text: " + d);
+
+        sc.close();
+    }
+}
