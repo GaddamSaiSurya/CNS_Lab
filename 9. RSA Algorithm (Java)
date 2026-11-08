@@ -1,0 +1,60 @@
+import java.util.Scanner;
+
+public class rsa {
+
+    static long pow(long b, long e, long n) {
+        long r = 1;
+        b %= n;
+
+        while (e > 0) {
+            if ((e & 1) == 1) {
+                r = r * b % n;
+            }
+
+            b = b * b % n;
+            e >>= 1;
+        }
+
+        return r;
+    }
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter p: ");
+        int p = sc.nextInt();
+
+        System.out.print("Enter q: ");
+        int q = sc.nextInt();
+
+        int n = p * q;
+        int phi = (p - 1) * (q - 1);
+
+        System.out.print("Enter e: ");
+        int e = sc.nextInt();
+
+        int d = 1;
+
+        while ((d * e) % phi != 1) {
+            d++;
+        }
+
+        System.out.print("Enter message: ");
+        int m = sc.nextInt();
+
+        long c = pow(m, e, n);
+        long dec = pow(c, d, n);
+
+        System.out.println("n = " + n);
+        System.out.println("phi(n) = " + phi);
+
+        System.out.println("Public Key: (" + e + ", " + n + ")");
+        System.out.println("Private Key: (" + d + ", " + n + ")");
+
+        System.out.println("Encrypted Message: " + c);
+        System.out.println("Decrypted Message: " + dec);
+
+        sc.close();
+    }
+}
